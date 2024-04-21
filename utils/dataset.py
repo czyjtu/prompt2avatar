@@ -18,7 +18,7 @@ class ProcessedDataset:
     labels: np.ndarray = field(init=False)
     model2embeddings: dict[_model_name, np.ndarray] = field(init=False)
     model2normalized_embeddings: dict[_model_name, np.ndarray] = field(init=False)
-    dna: list[Genes] = field(init=False)
+    dna: list[Genes] | None = field(init=False, default=None)
 
     def __post_init__(self):
         self.alligned_images = np.load(self.path / "alligned_images.npy")
@@ -26,7 +26,8 @@ class ProcessedDataset:
         self.labels = np.load(self.path / "alligned_labels.npy", allow_pickle=True)
         self.model2embeddings = self._get_embeddings()
         self.model2normalized_embeddings = {model_name: normalize(embeddings) for model_name, embeddings in self.model2embeddings.items()}
-        self.dna = [Genes.from_ck_string(dna) for dna in np.load(self.path / "dnas.npy", allow_pickle=True)]
+        if (self.path / "dnas.npy").exists():
+            self.dna = [Genes.from_ck_string(dna) for dna in np.load(self.path / "dnas.npy", allow_pickle=True)]
 
     def _get_embeddings(self):
         model2embeddings = {}

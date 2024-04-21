@@ -88,8 +88,8 @@ def main(out: str, dataset_dir: str, weights: str | None, model_type: str, train
         np.save(out_dir_alligned_images, alligned_images)
         np.save(out_dir_alligned_labels, alligned_labels)
         np.save(out_dir_alligned_paths, alligned_paths)
-        dnas = [open(path.replace("faces", "dna").replace("png", "txt"), "r").read() for path in alligned_paths]
-        np.save(out_dir / "dna.npy", dnas)
+        # dnas = [open(path.replace("faces", "dna").replace("png", "txt"), "r").read() for path in alligned_paths]
+        # np.save(out_dir / "dna.npy", dnas)
 
     for model_path in models_paths:
         print(f"Loading model {model_path}...")

@@ -162,3 +162,7 @@ data/dataset_2*
 data/lfw
 *.pth
 *.npy
+training_logs
+**/checkpoints
+**/wandb
+data/**
