@@ -187,13 +187,7 @@ class Genes(BaseModel):
     
     @staticmethod
     def from_array(array: np.ndarray, keys: list[str], template_flattened: dict[str, int] | None = None) -> Genes:
-        shifted_values = []
-        for key in keys:
-            val = array[key]
-            
-            shifted_values.append(val)
-        genes_dict = Genes.unflatten({key: val for key, val in zip(keys, shifted_values)})
-        
+        genes_dict = Genes.unflatten({key: int(val) for key, val in zip(keys, array)})
         template_dict = Genes.unflatten(template_flattened or {})
         template_dict.update(genes_dict)
         return Genes(**template_dict)
