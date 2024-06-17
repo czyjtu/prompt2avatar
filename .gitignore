@@ -166,3 +166,7 @@ training_logs
 **/checkpoints
 **/wandb
 data/**
+experiments/**
+samples*
+**/lightning_logs/**
+**/.DS_Store

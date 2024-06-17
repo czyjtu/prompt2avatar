@@ -5,9 +5,18 @@ import pandas as pd
 from dataclasses import dataclass, field
 from sklearn.preprocessing import normalize
 import pandas as pd 
-from utils.dna import Genes
+from utils.dna import Genes, create_template_from_genes
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 _model_name = str
+DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+TEST_GENESET_DIR = DATA_DIR / "test_geneset_embeddings"
+TEST_GENESET_GENES = ["gene_forehead_brow_height.forehead_brow_height_pos", "gene_jaw_height.jaw_height_pos", "skin_color[1]"]
+_GENESETS = {
+    "test": (TEST_GENESET_DIR, TEST_GENESET_GENES),
+    "easy": 
+}
 
 
 @dataclass 
@@ -54,3 +63,44 @@ class ProcessedDataset:
             df = pd.DataFrame(init_dict)
             model2df[model] = df
         return model2df
+    
+
+def load_geneset_dataset(geneset_name: str) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, MinMaxScaler]:
+    geneset_path, genes_to_predict = _GENESETS[geneset_name]
+    dataset = ProcessedDataset(geneset_path)
+    genes_vectorized = [dna.asarray(list(genes_to_predict)) for dna in dataset.dna]
+    genes_vectorized = np.stack(genes_vectorized)
+    X = genes_vectorized
+    Y = dataset.model2normalized_embeddings["arcface-r100"]
+    (X_train, Y_train, train_images), (X_test, Y_test, test_images) = split_by_indices(
+        [X, Y, np.array(dataset.alligned_images)], 0.1
+    )
+    scaler_x = MinMaxScaler()
+    X_train_sc = scaler_x.fit_transform(X_train)
+    X_test_sc = scaler_x.transform(X_test)
+    return X_train_sc, X_test_sc, Y_train, Y_test, train_images, test_images, scaler_x
+
+def split_by_indices(arrs: list[np.ndarray], test_size: float) -> tuple[list[np.ndarray], list[np.ndarray]]:
+    indices = np.arange(len(arrs[0]))
+    np.random.seed(42)
+    np.random.shuffle(indices)
+    train_indices, test_indices = train_test_split(indices, test_size=test_size, random_state=42)
+    arrs_train = [array[train_indices] for array in arrs]
+    arrs_test = [array[test_indices] for array in arrs]
+    return arrs_train, arrs_test
+
+def save_predicitons(preds: np.ndarray, scaler: MinMaxScaler, path: Path, geneset_name: str) -> None:
+    def ypred_to_dnas(Y_pred, predicted_genes, dataset_dna_template):
+        genes = [Genes.from_array(Y_pred[i], predicted_genes, dataset_dna_template) for i in range(len(Y_pred))]
+        return genes
+
+    def save_dnas(genes: list[Genes], path: Path):
+        path.mkdir(parents=True, exist_ok=True)
+        for i, gene in enumerate(genes):
+            with open(path / f'gene_{i}.txt', 'w') as f:
+                f.write(gene.to_ck_string())
+
+    geneset_path, genes_to_predict = _GENESETS[geneset_name]
+    dataset = ProcessedDataset(geneset_path)
+    template = create_template_from_genes(dataset.dna)
+    save_dnas(ypred_to_dnas(scaler.inverse_transform(preds), genes_to_predict, template), path)
