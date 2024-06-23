@@ -91,10 +91,12 @@ def load_geneset_dataset(geneset_name: str) -> tuple[np.ndarray, np.ndarray, np.
     (X_train, Y_train, train_images), (X_test, Y_test, test_images) = split_by_indices(
         [X, Y, np.array(dataset.alligned_images)], 0.1
     )
+    (X_train, Y_train, train_images), (X_val, Y_val, val_images) = split_by_indices([X_train, Y_train, train_images], 0.1)
     scaler_x = MinMaxScaler()
     X_train_sc = scaler_x.fit_transform(X_train)
     X_test_sc = scaler_x.transform(X_test)
-    return X_train_sc, X_test_sc, Y_train, Y_test, train_images, test_images, scaler_x
+    X_val_sc = scaler_x.transform(X_val)
+    return X_train_sc, X_val_sc, X_test_sc, Y_train, Y_val, Y_test, train_images, val_images, test_images, scaler_x
 
 def split_by_indices(arrs: list[np.ndarray], test_size: float) -> tuple[list[np.ndarray], list[np.ndarray]]:
     indices = np.arange(len(arrs[0]))
