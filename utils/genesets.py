@@ -40,4 +40,3 @@ def load_geneset_dataset(geneset_name: str) -> tuple[np.ndarray, np.ndarray, np.
     X_test_sc = scaler_x.transform(X_test)
 
     return X_train_sc, X_test_sc, Y_train, Y_test, train_images, test_images, scaler_x
-

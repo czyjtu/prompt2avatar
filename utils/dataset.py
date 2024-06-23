@@ -13,9 +13,25 @@ _model_name = str
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 TEST_GENESET_DIR = DATA_DIR / "test_geneset_embeddings"
 TEST_GENESET_GENES = ["gene_forehead_brow_height.forehead_brow_height_pos", "gene_jaw_height.jaw_height_pos", "skin_color[1]"]
+EASY_GENESET_DIR = DATA_DIR / "easy_geneset_embeddings"
+EASY_GENESET_GENES = [
+    'gene_forehead_brow_height',
+    'gene_bs_cheek_forward',
+    'gene_chin_height',
+    'gene_head_height',
+    'gene_jaw_height',
+    'gene_mouth_upper_lip_size',
+    'gene_mouth_height',
+    'gene_mouth_width',
+    'gene_bs_nose_tip_angle',
+    'gene_bs_nose_height',
+    'gene_eye_angle',
+    'gene_eye_distance',
+    'skin_color[1]',
+]
 _GENESETS = {
     "test": (TEST_GENESET_DIR, TEST_GENESET_GENES),
-    "easy": 
+    "easy": (EASY_GENESET_DIR, EASY_GENESET_GENES)
 }
 
 
@@ -104,3 +120,29 @@ def save_predicitons(preds: np.ndarray, scaler: MinMaxScaler, path: Path, genese
     dataset = ProcessedDataset(geneset_path)
     template = create_template_from_genes(dataset.dna)
     save_dnas(ypred_to_dnas(scaler.inverse_transform(preds), genes_to_predict, template), path)
+
+
+def freeze_genes(base_dataset: list[Genes], unlocked_genes: list[str]):
+    # what does this function do?
+    """This function creates new dataset with the same genes as the base dataset, but the genes that are not in the given list are replaced by the mean value."""
+    template = create_template_from_genes(base_dataset)
+    for gene in unlocked_genes:
+        for k in template.keys():
+            if gene in k:
+                del template[k]
+                print("Deleted: ", k)
+                break 
+    new_dataset = []
+    hashes = set()
+    for gene in base_dataset:
+        gene_dict = gene.flatten()
+        gene_dict.update(template)
+        new_dna = Genes(**Genes.unflatten(gene_dict))
+        hash_ = hash(new_dna.to_ck_string())
+        if hash_ not in hashes:
+            hashes.add(hash_)
+            new_dataset.append(new_dna)
+
+    print(f"Length of test geneset dataset: {len(new_dataset)}")
+    print(f"duplicates removed: {len(base_dataset) - len(new_dataset)}")
+    return new_dataset
