@@ -71,3 +71,11 @@ class MetricsCallback(pl.Callback):
         mae = self.mae(samples, self.X)
         r2 = self.r2(samples, self.X)
         return [rmse_loss.item(), scaled_rmse_loss.item(), mae.item(), r2.item()], ['RMSE', 'Scaled RMSE', "MAE", "R2"]
+
+
+class SimpleRegressionCallbacks(MetricsCallback):
+    def sample_model(self, pl_module):
+        pl_module.eval()
+        samples = pl_module(self.Y)
+        pl_module.train()
+        return samples
