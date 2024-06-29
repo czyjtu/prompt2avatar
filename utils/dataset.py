@@ -15,18 +15,18 @@ TEST_GENESET_DIR = DATA_DIR / "test_geneset_embeddings"
 TEST_GENESET_GENES = ["gene_forehead_brow_height.forehead_brow_height_pos", "gene_jaw_height.jaw_height_pos", "skin_color[1]"]
 EASY_GENESET_DIR = DATA_DIR / "easy_geneset_embeddings"
 EASY_GENESET_GENES = [
-    'gene_forehead_brow_height',
-    'gene_bs_cheek_forward',
-    'gene_chin_height',
-    'gene_head_height',
-    'gene_jaw_height',
-    'gene_mouth_upper_lip_size',
-    'gene_mouth_height',
-    'gene_mouth_width',
-    'gene_bs_nose_tip_angle',
-    'gene_bs_nose_height',
-    'gene_eye_angle',
-    'gene_eye_distance',
+    'gene_forehead_brow_height.forehead_brow_height_pos',
+    'gene_bs_cheek_forward.cheek_forward_pos',
+    'gene_chin_height.chin_height_pos',
+    'gene_head_height.head_height_pos',
+    'gene_jaw_height.jaw_height_pos',
+    'gene_mouth_upper_lip_size.mouth_upper_lip_size_pos',
+    'gene_mouth_height.mouth_height_pos',
+    'gene_mouth_width.mouth_width_pos',
+    'gene_bs_nose_tip_angle.nose_tip_angle_pos',
+    'gene_bs_nose_height.nose_height_pos',
+    'gene_eye_angle.eye_angle_pos',
+    'gene_eye_distance.eye_distance_pos',
     'skin_color[1]',
 ]
 _GENESETS = {
@@ -122,6 +122,12 @@ def save_predicitons(preds: np.ndarray, scaler: MinMaxScaler, path: Path, genese
     dataset = ProcessedDataset(geneset_path)
     template = create_template_from_genes(dataset.dna)
     save_dnas(ypred_to_dnas(scaler.inverse_transform(preds), genes_to_predict, template), path)
+
+def get_template_from_geneset(geneset_name: str) -> dict:
+    geneset_path, genes_to_predict = _GENESETS[geneset_name]
+    dataset = ProcessedDataset(geneset_path)
+    template = create_template_from_genes(dataset.dna)
+    return template
 
 
 def freeze_genes(base_dataset: list[Genes], unlocked_genes: list[str]):
