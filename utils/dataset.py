@@ -80,6 +80,14 @@ class ProcessedDataset:
             model2df[model] = df
         return model2df
     
+def get_raw_dataset(geneset_name: str) -> tuple[np.ndarray, np.ndarray]:
+    geneset_path, genes_to_predict = _GENESETS[geneset_name]
+    dataset = ProcessedDataset(geneset_path)
+    genes_vectorized = [dna.asarray(list(genes_to_predict)) for dna in dataset.dna]
+    genes_vectorized = np.stack(genes_vectorized)
+    X = genes_vectorized
+    Y = dataset.model2normalized_embeddings["arcface-r100"]
+    return X, Y
 
 def load_geneset_dataset(geneset_name: str) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, MinMaxScaler]:
     geneset_path, genes_to_predict = _GENESETS[geneset_name]

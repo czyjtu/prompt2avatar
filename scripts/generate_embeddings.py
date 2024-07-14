@@ -65,6 +65,7 @@ def main(out: str, dataset_dir: str, weights: str | None, model_type: str, train
     print(f"Input dataset: {dataset_dir}")
     out_dir = Path(out)
     out_dir.mkdir(exist_ok=True, parents=True)
+    print(f"out dir: {out_dir}")
     out_dir_alligned_images = out_dir / "alligned_images.npy"
     out_dir_alligned_labels = out_dir / "alligned_labels.npy"
     out_dir_alligned_paths = out_dir / "alligned_paths.npy"
@@ -99,7 +100,7 @@ def main(out: str, dataset_dir: str, weights: str | None, model_type: str, train
             model = ufr.load_insightface_model(model_path)
         print("Getting embeddings...")
         embeddings = ufr.get_embeddings(alligned_images, model, batch_size=batch_size)
-        print("Saving embeddings...")
+        print(f"Saving embeddings with shape {embeddings.shape} to ", out_dir_embeddings)
         model_weights_fname = model_path.split("/")[-1].split(".")[0]
         np.save(out_dir_embeddings.format(model_weights=model_weights_fname), embeddings)
 

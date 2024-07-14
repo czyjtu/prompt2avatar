@@ -74,7 +74,7 @@ def get_embeddings(images: np.ndarray, model: th.nn.Module, batch_size: int=32, 
 
 def get_dataset(root_dir: Path) -> tuple[np.ndarray["X", float], np.ndarray["y", str], list[Path]]:
     extensions = ["png", "jpg", "jpeg"]
-    paths = list(it.chain.from_iterable([root_dir.rglob(f"*.{ext}") for ext in extensions]))
+    paths = list(it.chain.from_iterable([root_dir.rglob(f"*.{ext}") for ext in extensions]))[:10_000]
     paths = sorted(paths)
     images = [np.array(Image.open(img_path)) for img_path in tqdm(paths)]
     labels = [img_path.relative_to(root_dir).parent for img_path in paths]
