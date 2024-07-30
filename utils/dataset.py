@@ -29,9 +29,48 @@ EASY_GENESET_GENES = [
     'gene_eye_distance.eye_distance_pos',
     'skin_color[1]',
 ]
+MEDIUIM_GENESET_GENES = [
+    "gene_bs_cheek_width.cheek_width_pos",
+    "gene_bs_cheek_forward.cheek_forward_pos",
+    "gene_bs_cheek_height.cheek_height_pos",
+    "gene_chin_height.chin_height_pos",
+    "gene_chin_width.chin_width_pos",
+    "gene_chin_forward.chin_forward_pos",
+    "gene_bs_ear_outward.ear_outward_pos",
+    "gene_bs_ear_size.ear_size_pos",
+    "gene_bs_ear_angle.ear_angle_pos",
+    "gene_forehead_brow_height.forehead_brow_height_pos",
+    "gene_bs_forehead_brow_outer_height.forehead_brow_outer_height_pos",
+    "gene_bs_forehead_brow_inner_height.forehead_brow_inner_height_pos",
+    "gene_head_height.head_height_pos",
+    "gene_head_profile.head_profile_pos",
+    "gene_head_width.head_width_pos",
+    "gene_jaw_height.jaw_height_pos",
+    "gene_jaw_width.jaw_width_pos",
+    "gene_jaw_angle.jaw_angle_pos",
+    "gene_mouth_upper_lip_size.mouth_upper_lip_size_pos",
+    "gene_mouth_height.mouth_height_pos",
+    "gene_mouth_width.mouth_width_pos",
+    "gene_neck_length.neck_length_pos",
+    "gene_neck_width.neck_width_pos",
+    "gene_bs_nose_tip_angle.nose_tip_angle_pos",
+    "gene_bs_nose_height.nose_height_pos",
+    "gene_bs_nose_nostril_width.nose_nostril_width_pos",
+    "gene_eye_angle.eye_angle_pos",
+    "gene_eye_distance.eye_distance_pos",
+    "gene_bs_eye_upper_lid_size.eye_upper_lid_size_pos",
+    "gene_height.normal_height",
+    "expression_other.cheek_wrinkles_both_01",
+    "face_detail_temple_def.temple_def",
+    "skin_color[1]",
+    "skin_color[0]",
+    "skin_color[2]",
+]
+
 _GENESETS = {
     "test": (TEST_GENESET_DIR, TEST_GENESET_GENES),
-    "easy": (EASY_GENESET_DIR, EASY_GENESET_GENES)
+    "easy": (EASY_GENESET_DIR, EASY_GENESET_GENES),
+    "medium": (DATA_DIR / "medium_geneset_embeddings", MEDIUIM_GENESET_GENES),
 }
 
 
@@ -79,14 +118,15 @@ class ProcessedDataset:
             df = pd.DataFrame(init_dict)
             model2df[model] = df
         return model2df
+
     
-def get_raw_dataset(geneset_name: str) -> tuple[np.ndarray, np.ndarray]:
+def get_raw_dataset(geneset_name: str, embeddings: str="arcface-r100") -> tuple[np.ndarray, np.ndarray]:
     geneset_path, genes_to_predict = _GENESETS[geneset_name]
     dataset = ProcessedDataset(geneset_path)
     genes_vectorized = [dna.asarray(list(genes_to_predict)) for dna in dataset.dna]
     genes_vectorized = np.stack(genes_vectorized)
     X = genes_vectorized
-    Y = dataset.model2normalized_embeddings["arcface-r100"]
+    Y = dataset.model2normalized_embeddings[embeddings]
     return X, Y
 
 def load_geneset_dataset(geneset_name: str) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, MinMaxScaler]:

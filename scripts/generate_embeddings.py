@@ -98,11 +98,15 @@ def main(out: str, dataset_dir: str, weights: str | None, model_type: str, train
             raise NotImplementedError("Facenet model is not implemented")
         elif model_type == "insightface":
             model = ufr.load_insightface_model(model_path)
-        print("Getting embeddings...")
-        embeddings = ufr.get_embeddings(alligned_images, model, batch_size=batch_size)
-        print(f"Saving embeddings with shape {embeddings.shape} to ", out_dir_embeddings)
+
+        m = dict(model.named_modules())
+        layers_to_hook = [list(k for k in m.keys() if f"layer{i}" in k)[-1] for i in range(1, 5)]
+        print(f"Getting embeddings from layers {layers_to_hook}...")
         model_weights_fname = model_path.split("/")[-1].split(".")[0]
-        np.save(out_dir_embeddings.format(model_weights=model_weights_fname), embeddings)
+        ufr.save_features_from_layers(model, layers_to_hook, alligned_images, out_dir, model_weights_fname)
+        # embeddings = ufr.get_embeddings(alligned_images, model, batch_size=batch_size)
+        # print(f"Saving embeddings with shape {embeddings.shape} to ", out_dir_embeddings)
+        # np.save(out_dir_embeddings.format(model_weights=model_weights_fname), embeddings)
 
 
 if __name__ == "__main__":
