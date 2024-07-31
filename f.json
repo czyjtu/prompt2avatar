@@ -1,0 +1,23 @@
+{
+    "attributes": {
+        "specversion": "1.0",
+        "id": "11867006552704850",
+        "source": "//pubsub.googleapis.com/projects/sc-9366-nga-dev/topics/pl.allegro.analytics.meta_router__event",
+        "type": "google.cloud.pubsub.topic.v1.messagePublished",
+        "datacontenttype": "application/json",
+        "time": "2024-07-29T11:31:30.496Z"
+    },
+    "data": {
+        "message": {
+            "attributes": {
+                "sv": "2"
+            },
+            "data": "HkNNLjk5MTIxMy50el9jehpBZGRUb1dpc2hsaXN0WCtJNFNEKzFPeUNrUUtXSVFrQ2hpYTZITnZORmZ3Zm51MDl3Znc4czJFQVU9xoWU5J9kAkgyYjU5ZjRhMS01MzAwLTQ1NmUtYWVhZC02YmY2NzA4ZjE3MWUCEjExODA0MjkxMALqAU1vemlsbGEvNS4wIChNYWNpbnRvc2g7IEludGVsIE1hYyBPUyBYIDEwXzE1XzcpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMjYuMC4wLjAgU2FmYXJpLzUzNy4zNgIWMTAwMDAwMDAxNzkCSGFjNTI3N2U4LTUyZDItNDQ4NC1iOWM3LWJlNGE4Y2U4MTQ4NwIMMzIyMTI0AgYehIAAAAACAQEBAQEAAA==",
+            "messageId": "11867006552704850",
+            "message_id": "11867006552704850",
+            "publishTime": "2024-07-29T11:31:30.496Z",
+            "publish_time": "2024-07-29T11:31:30.496Z"
+        },
+        "subscription": "projects/sc-9366-nga-dev/subscriptions/eventarc-europe-west3-meta-router-event-sender-214597-sub-006"
+    }
+}

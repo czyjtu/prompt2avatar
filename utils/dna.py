@@ -100,7 +100,7 @@ class Genes(BaseModel):
     face_detail_eye_lower_lid_def: dict[str, NonNegativeInt]#only first, _neg = _pos, 
     face_detail_nose_ridge_def: dict[str, int] = Field(description=_NEG_SENSITIVE) #only first, _neg != _pos, categorical but steering using _neg
     face_detail_nose_tip_def: dict[str, NonNegativeInt] #only first, _neg = _pos, 
-    face_detail_temple_def: dict[str, NonNegativeInt] #only first, _neg = _pos, 
+    face_detail_temple_def: dict[str, int] #only first, _neg = _pos,  # TODO change to nongenativeint
     gene_bs_body_type: dict[str, NonNegativeInt] # body fat here body_fat_head_fat_(low|medium|high), very influential but categorical
     
     face_detail_eye_socket: dict[str, NonNegativeInt] # categorical

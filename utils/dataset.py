@@ -146,6 +146,21 @@ def load_geneset_dataset(geneset_name: str) -> tuple[np.ndarray, np.ndarray, np.
     X_val_sc = scaler_x.transform(X_val)
     return X_train_sc, X_val_sc, X_test_sc, Y_train, Y_val, Y_test, train_images, val_images, test_images, scaler_x
 
+def load_geneset_dataset_pca_v1(geneset_name: str) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, MinMaxScaler]:
+    geneset_path, genes_to_predict = _GENESETS[geneset_name]
+    dataset = ProcessedDataset(geneset_path)
+    genes_vectorized = [dna.asarray(list(genes_to_predict)) for dna in dataset.dna]
+    genes_vectorized = np.stack(genes_vectorized)
+    X = genes_vectorized
+    Y = dataset.model2embeddings["pca-combined-v1"]
+    (X_train, Y_train, train_images), (X_test, Y_test, test_images) = split_by_indices(
+        [X, Y, np.array(dataset.alligned_images)], 0.1
+    )
+    scaler_x = MinMaxScaler()
+    X_train_sc = scaler_x.fit_transform(X_train)
+    X_test_sc = scaler_x.transform(X_test)
+    return X_train_sc, X_test_sc, Y_train, Y_test, train_images, test_images, scaler_x
+
 def split_by_indices(arrs: list[np.ndarray], test_size: float) -> tuple[list[np.ndarray], list[np.ndarray]]:
     indices = np.arange(len(arrs[0]))
     np.random.seed(42)
