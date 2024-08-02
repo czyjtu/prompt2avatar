@@ -52,7 +52,7 @@ class MLP(pl.LightningModule):
         return self.model(x)
 
     def configure_optimizers(self):
-        optimizer = torch.optim.Adam(self.parameters(), lr=self.lr)
+        optimizer = torch.optim.Adam(self.parameters(), lr=self.lr)#torch.optim.SGD(self.parameters(), lr=self.lr) #
         return optimizer
 
     def training_step(self, batch, batch_idx):
@@ -110,7 +110,7 @@ def train_mlp(X_train, X_test, Y_train, Y_test, test_images, EXPERIMENT_DIR: Pat
 
         with wandb.init(
             project="prompt2avatar", entity="czyjtu",
-            tags=["mlp", model_name, GENESET, feature_names], group="mlp" + GENESET
+            tags=["mlp", model_name, GENESET, feature_names], group="mlp" + GENESET, mode="disabled"
             ) as wandb_run:
             # Initialize Wandb logger
             wandb_logger = WandbLogger(project='prompt2avatar', entity="czyjtu", log_model=True)
@@ -133,7 +133,7 @@ def train_mlp(X_train, X_test, Y_train, Y_test, test_images, EXPERIMENT_DIR: Pat
             trainer = pl.Trainer(
                 max_epochs=60,
                 logger=wandb_logger,
-                callbacks=[checkpoint_callback, EarlyStopping(monitor="val_loss", mode="min", patience=10), callback],
+                callbacks=[checkpoint_callback, EarlyStopping(monitor="val_loss", mode="min", patience=100), callback],
                 default_root_dir=EXPERIMENT_DIR / "training_logs",
                 enable_checkpointing=True,
             )  # You can adjust max_epochs and other parameters

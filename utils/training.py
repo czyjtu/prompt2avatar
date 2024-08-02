@@ -75,3 +75,7 @@ class AugmentationDataset(Dataset):
             image = self.transform(image)
         return image
     
+if __name__ == "__main__":
+    images = np.zeros((100, 112, 112, 3))
+    emb = get_clip_embeddings(images)
+    print(emb.shape)
