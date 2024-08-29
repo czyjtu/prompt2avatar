@@ -14,6 +14,7 @@ DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 TEST_GENESET_DIR = DATA_DIR / "test_geneset_embeddings"
 TEST_GENESET_GENES = ["gene_forehead_brow_height.forehead_brow_height_pos", "gene_jaw_height.jaw_height_pos", "skin_color[1]"]
 EASY_GENESET_DIR = DATA_DIR / "easy_geneset_embeddings"
+EASY_V2_GENESET_DIR = DATA_DIR / "easyv2_geneset_embeddings"
 EASY_GENESET_GENES = [
     'gene_forehead_brow_height.forehead_brow_height_pos',
     'gene_bs_cheek_forward.cheek_forward_pos',
@@ -28,6 +29,32 @@ EASY_GENESET_GENES = [
     'gene_eye_angle.eye_angle_pos',
     'gene_eye_distance.eye_distance_pos',
     'skin_color[1]',
+]
+EASY_V2_GENESET_GENES = [
+    "gene_forehead_brow_height.forehead_brow_height_pos",
+    "gene_bs_cheek_forward.cheek_forward_pos",
+    "gene_chin_height.chin_height_pos",
+    "gene_head_height.head_height_pos",
+    "gene_jaw_height.jaw_height_pos",
+    "gene_mouth_upper_lip_size.mouth_upper_lip_size_pos",
+    "gene_mouth_height.mouth_height_pos",
+    "gene_mouth_width.mouth_width_pos",
+    "gene_bs_nose_tip_angle.nose_tip_angle_pos",
+    "gene_bs_nose_height.nose_height_pos",
+    "gene_eye_angle.eye_angle_pos",
+    "gene_eye_distance.eye_distance_pos",
+    "skin_color[1]",
+    "gene_height.normal_height",
+    "gene_bs_ear_size.ear_size_pos",
+    "gene_chin_width.chin_width_pos",
+    "gene_bs_forehead_brow_inner_height.forehead_brow_inner_height_pos",
+    "expression_other.cheek_wrinkles_both_01",
+    "gene_jaw_width.jaw_width_pos",
+    "gene_bs_ear_outward.ear_outward_pos",
+    "gene_bs_nose_nostril_width.nose_nostril_width_pos",
+    "gene_neck_width.neck_width_pos",
+    "gene_neck_length.neck_length_pos",
+    "gene_chin_forward.chin_forward_pos",
 ]
 MEDIUIM_GENESET_GENES = [
     "gene_bs_cheek_width.cheek_width_pos",
@@ -70,6 +97,7 @@ MEDIUIM_GENESET_GENES = [
 _GENESETS = {
     "test": (TEST_GENESET_DIR, TEST_GENESET_GENES),
     "easy": (EASY_GENESET_DIR, EASY_GENESET_GENES),
+    "easyv2": (EASY_V2_GENESET_DIR, EASY_V2_GENESET_GENES),
     "medium": (DATA_DIR / "medium_geneset_embeddings", MEDIUIM_GENESET_GENES),
 }
 
