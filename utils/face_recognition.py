@@ -11,6 +11,8 @@ import itertools as it
 import warnings 
 import torchvision.transforms as VT
 from typing import Literal
+from facenet_pytorch import InceptionResnetV1
+
 
 if th.cuda.is_available():
     DEVICE = "cuda"
@@ -118,18 +120,18 @@ def allign_faces(images: np.ndarray, detector: FaceDetector, labels: list[str], 
     return np.array(filtered_images), np.array(filtered_labels)
 
 
-def get_embeddings(images: np.ndarray, model: th.nn.Module, batch_size: int=32, device: str=DEVICE) -> np.ndarray:
+def get_embeddings(images: np.ndarray, model: th.nn.Module, batch_size: int=32, device: str=DEVICE, disable_tqdm: bool = False) -> np.ndarray:
     transform = VT.Compose([
         VT.ToTensor(),
         VT.Resize((112, 112)),
         VT.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
     ])
 
-    data = th.stack([transform(img) for img in tqdm(images)])
+    data = th.stack([transform(img) for img in tqdm(images, disable=disable_tqdm)])
     model = model.to(device)
 
     embedddings = []
-    for i in tqdm(range(0, images.shape[0], batch_size)):
+    for i in tqdm(range(0, len(images), batch_size), disable=disable_tqdm):
         batch = data[i:i+batch_size].to(device)
         embeddings = model(batch).detach()
         embedddings.append(embeddings)  
@@ -152,3 +154,8 @@ def load_insightface_model(weights_path: str) -> th.nn.Module:
     model.load_state_dict(th.load(weights_path, map_location=th.device('cpu')))
     model = model.eval()
     return model
+
+
+def load_facenet_model(training_dataset: Literal['casia-webface', 'vggface2']) -> th.nn.Module:
+    resnet = InceptionResnetV1(pretrained=training_dataset, device="cpu").eval()
+    return resnet

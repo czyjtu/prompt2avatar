@@ -102,7 +102,7 @@ def train_mlp(X_train, X_test, Y_train, Y_test, test_images, EXPERIMENT_DIR: Pat
         model = MLP.load_from_checkpoint(mlp_model_path)
     else:
         mlp_model_path.parent.mkdir(parents=True, exist_ok=True)
-        model_raw = model_raw or (input_dim, output_dim, [512, 512, 512])
+        model_raw = model_raw or DNARegressor(input_dim, output_dim, [512, 512, 512])
         model_name = model_raw_name or "mlp"
         model = MLP(model_raw)
 

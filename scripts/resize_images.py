@@ -42,6 +42,11 @@ def resize_image(image_path, max_dimension, out_dir):
     help="Data directory containing the images."
 )
 def main(out: str, in_dir: str):
+    print(f"Input directory: {in_dir}")
+    Path(f"{out}/faces_resized").mkdir(parents=True, exist_ok=True)
     for path in tqdm(sorted(list(Path(in_dir).rglob("*.png")))):
-        resize_image(path, 430, f"{out}/faces_resized")
+        resize_image(path, 400, f"{out}/faces_resized")
+
+if __name__ == "__main__":
+    main()
         

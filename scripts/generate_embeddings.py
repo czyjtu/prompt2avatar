@@ -182,23 +182,23 @@ def represent(
     help="Batch size to use for embeddings generation"
 )
 def main(out: str, dataset_dir: str, weights: str | None, model_type: str, training_dataset: str | None, batch_size: int):
-    if model_type == "facenet":
-        raise NotImplementedError("Facenet model is not implemented")
-        # if training_dataset is None:
-        #     models_paths = ["casia-webface", "vggface2"]
-        #     print(f"Will evaluate facenet pretrained on {models_paths}")
-        # if weights is not None:
-        #     warnings.warn("Weights are ignored for facenet model")
+    # if model_type == "facenet":
+    #     raise NotImplementedError("Facenet model is not implemented")
+    #     # if training_dataset is None:
+    #     #     models_paths = ["casia-webface", "vggface2"]
+    #     #     print(f"Will evaluate facenet pretrained on {models_paths}")
+    #     # if weights is not None:
+    #     #     warnings.warn("Weights are ignored for facenet model")
 
-    elif model_type == "insightface":
-        if weights is None:
-            raise ValueError("InsightFace model requires weights directory to be specified")
+    # elif model_type == "insightface":
+    #     if weights is None:
+    #         raise ValueError("InsightFace model requires weights directory to be specified")
         
-        if (weights_path := Path(weights)).is_dir():
-            models_paths = [str(p) for p in weights_path.rglob("*_*.pth")]
-        else:
-            models_paths = [str(weights_path)]
-        print(f"Found {len(models_paths)} inisghtface models: {models_paths}")
+    #     if (weights_path := Path(weights)).is_dir():
+    #         models_paths = [str(p) for p in weights_path.rglob("*_*.pth")]
+    #     else:
+    #         models_paths = [str(weights_path)]
+    #     print(f"Found {len(models_paths)} inisghtface models: {models_paths}")
 
 
     print(f"Input dataset: {dataset_dir}")
@@ -237,6 +237,12 @@ def main(out: str, dataset_dir: str, weights: str | None, model_type: str, train
     #         raise NotImplementedError("Facenet model is not implemented")
     #     elif model_type == "insightface":
     #         model = ufr.load_insightface_model(model_path)
+    for model_path in ['casia-webface', 'vggface2']:
+        print(f"Loading model {model_path}...")
+        if model_type == "facenet":
+            model = ufr.load_facenet_model(model_path)
+        elif model_type == "insightface":
+            model = ufr.load_insightface_model(model_path)
 
     #     m = dict(model.named_modules())
     #     layers_to_hook = []#[list(k for k in m.keys() if f"layer{i}" in k)[-1] for i in range(1, 5)]
@@ -265,6 +271,11 @@ def main(out: str, dataset_dir: str, weights: str | None, model_type: str, train
     embeddings = np.array(embeddings)
     np.save(out_dir / "deepface_embeddings.npy", embeddings)
 
+        m = dict(model.named_modules())
+        layers_to_hook = []#[list(k for k in m.keys() if f"layer{i}" in k)[-1] for i in range(1, 5)]
+        print(f"Getting embeddings from layers {layers_to_hook}...")
+        model_weights_fname = model_path.split("/")[-1].split(".")[0]
+        ufr.save_features_from_layers(model, layers_to_hook, alligned_images, out_dir, model_weights_fname)
         # embeddings = ufr.get_embeddings(alligned_images, model, batch_size=batch_size)
         # print(f"Saving embeddings with shape {embeddings.shape} to ", out_dir_embeddings)
         # np.save(out_dir_embeddings.format(model_weights=model_weights_fname), embeddings)
