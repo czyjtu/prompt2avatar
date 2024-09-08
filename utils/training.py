@@ -3,10 +3,6 @@
 import numpy as np
 import numpy.typing as npt 
 import torch 
-import pytorch_lightning as pl
-from pytorch_lightning.callbacks import ModelCheckpoint
-from torch.utils.data import Dataset, DataLoader
-from pytorch_lightning.loggers import WandbLogger
 from sklearn.decomposition import PCA
 from transformers import CLIPImageProcessor, CLIPVisionModelWithProjection
 from utils.dataset import ProcessedDataset
@@ -61,19 +57,6 @@ def get_clip_embeddings(images: np.ndarray, device: str = "cpu", dtype=torch.flo
 from torchvision import transforms as VIT
 
 
-class AugmentationDataset(Dataset):
-    def __init__(self, images, transform=None):
-        self.data = images
-        self.transform = transform
-
-    def __len__(self):
-        return len(self.data)
-
-    def __getitem__(self, idx):
-        image = self.data[idx]
-        if self.transform:
-            image = self.transform(image)
-        return image
     
 if __name__ == "__main__":
     images = np.zeros((100, 112, 112, 3))

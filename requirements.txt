@@ -1,0 +1,10 @@
+insightface
+
+torch 
+torchvision 
+numpy 
+matplotlib
+umap-learn
+scikit-learn
+tf-keras==2.12.0
+transformers
